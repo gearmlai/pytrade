@@ -3,6 +3,7 @@ import datetime as dt
 from fipc import fakeipc
 
 fi = fakeipc.SytrapFakeIpc()
+debug = False  # default
 
 
 def get_tot_items(bycode=True):

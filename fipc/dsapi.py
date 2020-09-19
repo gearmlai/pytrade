@@ -15,6 +15,8 @@ itnum = cpstkcd.GetCount()  # this line is req. for run stockChart. dummy itcode
 
 cptrade = win32com.client.Dispatch("CpTrade.CpTd0311")
 
+
+
 # StockMst, get curr values
 cpstkm = win32com.client.Dispatch("dscbo1.StockMst")
 
@@ -70,15 +72,15 @@ def get_portfolio():
     cnt = cptrd.GetHeaderValue(7)
     cdl = []
     for i in range(cnt):
-        amount = cptrd.GetDataValue(7, i)  # 체결잔고수량
-        price = cptrd.GetDataValue(17, i)  # 체결장부단가
+        quantity = cptrd.GetDataValue(7, i)  # 체결잔고수량
+        price = int(cptrd.GetDataValue(17, i))  # 체결장부단가
         evalue = cptrd.GetDataValue(9, i)  # 평가금액
         profit = cptrd.GetDataValue(11, i)  # 수익률
         code = cptrd.GetDataValue(12, i)  # 종목코드
-        dfraw['amount'].append(amount)
+        dfraw['quantity'].append(quantity)
         dfraw['price'].append(price)
         dfraw['eval'].append(evalue)
-        dfraw['profit'].append(profit)
+        dfraw['profit'].append(profit)  # %
         cdl.append(code)
 
     return pd.DataFrame(dfraw, index=cdl), evalr
@@ -211,4 +213,9 @@ def sell(itcode, quantity, price, ttype='normal'):
 
 if __name__ == "__main__":
     init_trade()
+    import time
+    for _ in range(30):
+        print(get_portfolio())
+        time.sleep(10)
+
     print(get_curp('A168330'))
